@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-#if !SILVERLIGHT
-// we do not support xml config on SL
-
 namespace CastleTests
 {
 	using Castle.MicroKernel.SubSystems.Conversion;
@@ -31,13 +27,12 @@ namespace CastleTests
 	public class PropertiesInspectionBehaviorTestCase
 	{
 		[Test]
-		[ExpectedException(typeof(ConverterException),
-			ExpectedMessage =
-				"Error on properties inspection. Could not convert the inspectionBehavior attribute value into an expected enum value. Value found is 'Invalid' while possible values are 'Undefined, None, All, DeclaredOnly'"
-			)]
 		public void InvalidOption()
 		{
-			new WindsorContainer(new XmlInterpreter(Xml.Embedded("propertyInspectionBehaviorInvalid.xml")));
+			var expectedMessage = "Error on properties inspection. Could not convert the inspectionBehavior attribute value into an expected enum value. Value found is 'Invalid' while possible values are 'Undefined, None, All, DeclaredOnly'";
+			var exception = Assert.Throws<ConverterException>(() =>
+				new WindsorContainer(new XmlInterpreter(Xml.Embedded("propertyInspectionBehaviorInvalid.xml"))));
+			Assert.AreEqual(exception.Message, expectedMessage);
 		}
 
 		[Test]
@@ -62,5 +57,3 @@ namespace CastleTests
 		}
 	}
 }
-
-#endif

@@ -50,7 +50,7 @@ namespace Castle.Facilities.Synchronize
 		/// <returns>The corresponding meta-info.</returns>
 		public SynchronizeMetaInfo CreateMetaFromType(Type implementation)
 		{
-			var syncAttrib = implementation.GetAttributes<SynchronizeAttribute>()[0];
+			var syncAttrib = implementation.GetAttributes<SynchronizeAttribute>(true)[0];
 			var metaInfo = new SynchronizeMetaInfo(syncAttrib);
 
 			PopulateMetaInfoFromType(metaInfo, implementation);
@@ -166,7 +166,11 @@ namespace Castle.Facilities.Synchronize
 		private static void PopulateMetaInfoFromType(SynchronizeMetaInfo metaInfo,
 		                                             Type implementation)
 		{
-			if (implementation == typeof(object) || implementation == typeof(MarshalByRefObject))
+			if (implementation == typeof(object)
+#if FEATURE_REMOTING
+				|| implementation == typeof(MarshalByRefObject)
+#endif
+				)
 			{
 				return;
 			}
@@ -175,7 +179,7 @@ namespace Castle.Facilities.Synchronize
 
 			foreach (var method in methods)
 			{
-				var atts = method.GetAttributes<SynchronizeAttribute>();
+				var atts = method.GetAttributes<SynchronizeAttribute>(true);
 
 				if (atts.Length != 0)
 				{

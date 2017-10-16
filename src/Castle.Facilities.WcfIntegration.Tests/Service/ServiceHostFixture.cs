@@ -1,4 +1,4 @@
-﻿// Copyright 2004-2011 Castle Project - http://www.castleproject.org/
+﻿// Copyright 2004-2017 Castle Project - http://www.castleproject.org/
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ namespace Castle.Facilities.WcfIntegration.Tests
 	using System.ServiceModel;
 	using System.ServiceModel.Activation;
 	using System.ServiceModel.Description;
-#if !(SILVERLIGHT)
 	using System.ServiceModel.Discovery;
-#endif
+
 	using Castle.Core.Resource;
 	using Castle.Facilities.Logging;
 	using Castle.Facilities.WcfIntegration.Behaviors;
 	using Castle.Facilities.WcfIntegration.Demo;
 	using Castle.Facilities.WcfIntegration.Tests.Behaviors;
+	using Castle.Services.Logging.Log4netIntegration;
 	using Castle.MicroKernel.Registration;
 	using Castle.Windsor;
 	using Castle.Windsor.Installer;
@@ -946,8 +946,8 @@ namespace Castle.Facilities.WcfIntegration.Tests
 				client.DoSomething();
 			}
 		}
-#if !(SILVERLIGHT)
-		[Test]
+
+		[Test] // If you have jetbrains dotmemory installed this test might fail, it picks up another endpoint
 		public void WillRegisterServiceWithServiceCatalog()
 		{
 			var netBinding = new NetTcpBinding { PortSharingEnabled = true };
@@ -1018,10 +1018,10 @@ namespace Castle.Facilities.WcfIntegration.Tests
 				CollectionAssert.AreEqual(domain.Scopes, endpoint.Scopes);
 			}
 		}
-#endif
+
 		protected IWindsorContainer RegisterLoggingFacility(IWindsorContainer container)
 		{
-			var logging = new LoggingFacility(LoggerImplementation.ExtendedLog4net);
+			var logging = new LoggingFacility().LogUsing<ExtendedLog4netFactory>();
 			container.AddFacility(logging);
 
 			memoryAppender = new MemoryAppender();

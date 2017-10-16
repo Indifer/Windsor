@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-#if !SILVERLIGHT
-// we do not support xml config on SL
-
 namespace Castle.Windsor.Tests.Configuration2.Properties
 {
 	using Castle.MicroKernel.Tests.ClassComponents;
@@ -38,10 +34,10 @@ namespace Castle.Windsor.Tests.Configuration2.Properties
 		}
 
 		[Test]
-		[ExpectedException(typeof(ConfigurationProcessingException))]
 		public void MissingProperties()
 		{
-			container = new WindsorContainer(ConfigHelper.ResolveConfigPath("Configuration2/Properties/config_with_missing_properties.xml"));
+			Assert.Throws<ConfigurationProcessingException>(() =>
+				container = new WindsorContainer(ConfigHelper.ResolveConfigPath("Configuration2/Properties/config_with_missing_properties.xml")));
 		}
 
 		[Test]
@@ -153,5 +149,3 @@ namespace Castle.Windsor.Tests.Configuration2.Properties
 		}
 	}
 }
-
-#endif

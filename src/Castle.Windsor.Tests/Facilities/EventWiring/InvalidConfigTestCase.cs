@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-#if (!SILVERLIGHT)
-
 namespace CastleTests.Facilities.EventWiring
 {
 	using Castle.Facilities.EventWiring;
@@ -33,12 +30,9 @@ namespace CastleTests.Facilities.EventWiring
 		}
 
 		[Test]
-		[ExpectedException(typeof(EventWiringException))]
 		public void InvalidConfigured()
 		{
-			Container.Resolve<object>("SimplePublisher");
+			Assert.Throws<EventWiringException>(() => Container.Resolve<object>("SimplePublisher"));
 		}
 	}
 }
-
-#endif

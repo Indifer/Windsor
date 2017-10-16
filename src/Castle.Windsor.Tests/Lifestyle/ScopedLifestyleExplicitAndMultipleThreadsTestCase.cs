@@ -14,8 +14,6 @@
 
 namespace CastleTests.Lifestyle
 {
-#if !SILVERLIGHT
-	// this is not working in SL at all
 	using System;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -34,6 +32,7 @@ namespace CastleTests.Lifestyle
 			Container.Register(Component.For<A>().LifestyleScoped());
 		}
 
+#if FEATURE_REMOTING   //async delegates depend on Remoting https://github.com/dotnet/corefx/issues/5940 
 		[Test]
 		public void Context_is_passed_onto_the_next_thread_Begin_End_Invoke()
 		{
@@ -83,6 +82,7 @@ namespace CastleTests.Lifestyle
 				Assert.AreNotSame(instance, instanceFromOtherThread);
 			}
 		}
+#endif
 
 		[Test]
 		public void Context_is_passed_onto_the_next_thread_TPL()
@@ -133,12 +133,8 @@ namespace CastleTests.Lifestyle
 				var signalled = @event.WaitOne(TimeSpan.FromSeconds(2));
 				if (exceptionFromTheOtherThread != null)
 				{
-#if DOTNET45
 					var capture = System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exceptionFromTheOtherThread);
 					capture.Throw();
-#else
-					throw exceptionFromTheOtherThread;
-#endif
 				}
 				Assert.IsTrue(signalled, "The other thread didn't finish on time.");
 				Assert.AreSame(instance, instanceFromOtherThread);
@@ -176,17 +172,12 @@ namespace CastleTests.Lifestyle
 				var signalled = @event.WaitOne(TimeSpan.FromSeconds(2));
 				if (exceptionFromTheOtherThread != null)
 				{
-#if DOTNET45
 					var capture = System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exceptionFromTheOtherThread);
 					capture.Throw();
-#else
-					throw exceptionFromTheOtherThread;
-#endif
 				}
 				Assert.IsTrue(signalled, "The other thread didn't finish on time.");
 				Assert.AreSame(instance, instanceFromOtherThread);
 			}
 		}
 	}
-#endif
 }

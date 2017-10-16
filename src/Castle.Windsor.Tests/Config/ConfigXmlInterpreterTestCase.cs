@@ -12,10 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-#if !SILVERLIGHT
-// we do not support xml config on SL
-
 namespace Castle.Windsor.Tests
 {
 	using System.Linq;
@@ -64,13 +60,12 @@ namespace Castle.Windsor.Tests
 		}
 
 		[Test]
-		[ExpectedException(typeof(ConfigurationProcessingException))]
 		public void MissingManifestResourceConfiguration()
 		{
 			var store = new DefaultConfigurationStore();
 			var source = new AssemblyResource("assembly://Castle.Windsor.Tests/missing_config.xml");
 			IKernel kernel = new DefaultKernel();
-			new XmlInterpreter(source).ProcessResource(source, store, kernel);
+			Assert.Throws<ConfigurationProcessingException>(() => new XmlInterpreter(source).ProcessResource(source, store, kernel));
 		}
 
 		[Test]
@@ -174,5 +169,3 @@ namespace Castle.Windsor.Tests
 		}
 	}
 }
-
-#endif

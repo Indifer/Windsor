@@ -40,7 +40,7 @@ namespace Castle.MicroKernel.Tests.SpecializedResolvers
 		[Test]
 		public void Composite_service_can_be_resolved_without_triggering_circular_dependency_detection_fuse()
 		{
-			Container.Register(Classes.FromThisAssembly()
+			Container.Register(Classes.FromAssembly(GetCurrentAssembly())
 			                   	.BasedOn<IEmptyService>()
 			                   	.WithService.Base()
 			                   	.ConfigureFor<EmptyServiceComposite>(r => r.Forward<EmptyServiceComposite>()));
@@ -81,7 +81,6 @@ namespace Castle.MicroKernel.Tests.SpecializedResolvers
 			}
 		}
 
-#if DOTNET45
 		[Test]
 		public void DependencyOn_Readonly_collection_OfServices_OnConstructor()
 		{
@@ -116,7 +115,6 @@ namespace Castle.MicroKernel.Tests.SpecializedResolvers
 				Assert.IsNotNull(service);
 			}
 		}
-#endif
 
 		[Test]
 		public void DependencyOnArrayOfServices_OnConstructor_empty_allowed_empty_provided()

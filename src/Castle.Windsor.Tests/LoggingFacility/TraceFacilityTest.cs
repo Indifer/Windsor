@@ -1,4 +1,4 @@
-// Copyright 2004-2010 Castle Project - http://www.castleproject.org/
+// Copyright 2004-2017 Castle Project - http://www.castleproject.org/
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#if FEATURE_CONSOLETRACELISTENER   //requires System.Diagnostics.ConsoleTraceListener
 namespace Castle.Facilities.Logging.Tests
 {
-	
-#if !SILVERLIGHT
 	using System;
 	using System.Diagnostics;
 	using System.IO;
 
+	using Castle.Core.Logging;
+	using Castle.Facilities.Logging.Tests.Classes;
 	using Castle.MicroKernel.Registration;
 	using Castle.Windsor;
-	using Castle.Facilities.Logging.Tests.Classes;
 
 	using NUnit.Framework;
 
@@ -32,7 +32,7 @@ namespace Castle.Facilities.Logging.Tests
 		[SetUp]
 		public void Setup()
 		{
-			container = base.CreateConfiguredContainer(LoggerImplementation.Trace);
+			container = base.CreateConfiguredContainer<TraceLoggerFactory>();
 			consoleWriter.GetStringBuilder().Length = 0;
 
 			var source = new TraceSource("Default");
@@ -76,5 +76,5 @@ namespace Castle.Facilities.Logging.Tests
 			Assert.AreEqual(expectedLogOutput, actualLogOutput);
 		}
 	}
-#endif
 }
+#endif

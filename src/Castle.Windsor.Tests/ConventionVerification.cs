@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-#if !(SILVERLIGHT)
-
 namespace CastleTests
 {
 	using System;
@@ -70,8 +67,8 @@ namespace CastleTests
 		private static Tuple<TAttribute, TAttribute, bool> EnsureBothHave<TAttribute>(MethodInfo interfaceMethod, MethodInfo classMethod, StringBuilder message)
 			where TAttribute : Attribute
 		{
-			var fromInterface = interfaceMethod.GetAttributes<TAttribute>().SingleOrDefault();
-			var fromClass = classMethod.GetAttributes<TAttribute>().SingleOrDefault();
+			var fromInterface = interfaceMethod.GetAttributes<TAttribute>(true).SingleOrDefault();
+			var fromClass = classMethod.GetAttributes<TAttribute>(true).SingleOrDefault();
 			var bothHaveTheAttribute = true;
 			if (fromInterface != null)
 			{
@@ -96,7 +93,7 @@ namespace CastleTests
 		public void Obsolete_members_of_kernel_are_in_sync()
 		{
 			var message = new StringBuilder();
-			var kernelMap = typeof(DefaultKernel).GetInterfaceMap(typeof(IKernel));
+			var kernelMap = typeof(DefaultKernel).GetTypeInfo().GetRuntimeInterfaceMap(typeof(IKernel));
 			for (var i = 0; i < kernelMap.TargetMethods.Length; i++)
 			{
 				var interfaceMethod = kernelMap.InterfaceMethods[i];
@@ -111,7 +108,7 @@ namespace CastleTests
 		public void Obsolete_members_of_windsor_are_in_sync()
 		{
 			var message = new StringBuilder();
-			var kernelMap = typeof(WindsorContainer).GetInterfaceMap(typeof(IWindsorContainer));
+			var kernelMap = typeof(WindsorContainer).GetTypeInfo().GetRuntimeInterfaceMap(typeof(IWindsorContainer));
 			for (var i = 0; i < kernelMap.TargetMethods.Length; i++)
 			{
 				var interfaceMethod = kernelMap.InterfaceMethods[i];
@@ -123,5 +120,3 @@ namespace CastleTests
 		}
 	}
 }
-
-#endif

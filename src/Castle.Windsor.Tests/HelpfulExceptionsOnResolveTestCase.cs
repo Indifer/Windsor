@@ -106,7 +106,7 @@ namespace CastleTests
 					"Instance CastleTests.Components.ADisposable of component Late bound CastleTests.Components.A is already being tracked.{0}" +
 					"The factory method providing instances of the component is reusing instances, but the lifestyle of the component is Transient which requires new instance each time.{0}" +
 					"In most cases it is advised for the factory method not to be handling reuse of the instances, but to chose a lifestyle that does that appropriately.{0}" +
-					"Alternatively, if you do not wish for Windsor to track the objects coming from the factory change your regustration to '.UsingFactoryMethod(yourFactory, managedExternally: true)'",
+					"Alternatively, if you do not wish for Windsor to track the objects coming from the factory change your registration to '.UsingFactoryMethod(yourFactory, managedExternally: true)'",
 					Environment.NewLine);
 
 			Assert.AreEqual(message, exception.Message);
@@ -175,7 +175,7 @@ namespace CastleTests
 			Exception exception = Assert.Throws<ComponentActivatorException>(() =>
 			                                                           Container.Resolve<HasInternalConstructor>());
 			var message =
-#if SILVERLIGHT
+#if !FEATURE_REMOTING
 				string.Format("Type {0} does not have a public default constructor and could not be instantiated.",
 				              typeof(HasInternalConstructor).FullName);
 
@@ -200,7 +200,7 @@ namespace CastleTests
 
 			Exception exception = Assert.Throws<ComponentActivatorException>(() => Container.Resolve<HasProtectedConstructor>());
 			var message =
-#if SILVERLIGHT
+#if !FEATURE_REMOTING
 				string.Format("Type {0} does not have a public default constructor and could not be instantiated.",
 							  typeof(HasProtectedConstructor).FullName);
 			exception = exception.InnerException;
